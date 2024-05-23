@@ -58,9 +58,9 @@ early_stopper:
 gradient_clipping:
   - null
 num_epochs:
-  - 10 # quick testing value
+  - 1 # quick testing value
 #  - 100 # testing value to make sure things run
-  # - 300
+#   - 300
 num_lrs:
   - 1
 features_only:
