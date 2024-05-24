@@ -124,6 +124,15 @@ class ExplainerExperiments:
 
         return train_metric, val_metric
 
+    def get_model(self, dataset, other=None):
+        model_class = self.model_config.model
+        model = model_class(dim_features=dataset.dim_features, dim_target=dataset.dim_target,
+                            model_configs=self.model_config, dataset_configs=self.dataset_config)
+
+        assert 'model_path' in other.keys()
+        model = load_checkpoint(path=other['model_path'], model=model)
+        return model
+
 
     def molecule_importance(self, dataset, attribution=None, logger=None, testing=True, training=False, other=None):
 
