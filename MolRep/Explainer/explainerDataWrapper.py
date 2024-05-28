@@ -232,17 +232,20 @@ class ExplainerDatasetWrapper:
 
     def get_train_loader(self, batch_size=1, shuffle=True, features_scaling=False):
 
+        # TODO
         indices = self.splits[0]["model_selection"][0]
         trainset_indices = indices['train']
         validset_indices = indices['valid'] if len(indices['valid']) else None
 
         scaler = None
+        # TODO make robust maybe
         if self.model_name in ['DGCNN', 'GIN', 'ECC', 'GraphSAGE', 'DiffPool', 'GraphNet', 'GAT', 'PyGCMPNN', 'MorganFP', 'MACCSFP', 'XGraphSAGE', 'XGAT', 'XGIN', 'XMorganFP', 'XMACCSFP']:
             train_dataset, valid_dataset, _ = Graph_data.Graph_construct_dataset(
                 self.features_path, train_idxs=trainset_indices, valid_idxs=validset_indices)
             train_loader, valid_loader, _, features_scaler, scaler = Graph_data.Graph_construct_dataloader(
                 trainset=train_dataset, validset=valid_dataset, batch_size=batch_size, shuffle=shuffle, task_type=self._task_type, features_scaling=features_scaling)
 
+        # problem here
         elif self.model_name in ['MPNN', 'DMPNN', 'CMPNN']:
             train_dataset, valid_dataset, _ = MPNN_data.MPNN_construct_dataset(
                 self.features_path, train_idxs=trainset_indices, valid_idxs=validset_indices)
