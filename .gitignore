@@ -1,8 +1,8 @@
 # Sub-Repo
-Outputs/ 
-MolRep/Data/ 
-MolRep/Datasets/ 
-Examples/.ipynb_checkpoints
+Outputs/
+#MolRep/Data/
+#MolRep/Datasets/
+#Examples/.ipynb_checkpoints
 
 # PyCharm
 .idea/
