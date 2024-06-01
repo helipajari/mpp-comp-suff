@@ -1,3 +1,4 @@
-0,IG,100,0.882992,0.045042,83,85,0.505371
-1,GradCAM,100,0.624151,0.041177,82,90,0.574239
-2,Random,100,0.990827,0.002129,100,100,0.999444
+explainer,original samples,average comp %,average suff,samples for avg comp,samples for avg suff,avg expl length
+IG,100,0.882992,0.045042,83,85,0.505371
+GradCAM,100,0.624151,0.041177,82,90,0.574239
+Random,100,0.990827,0.002129,100,100,0.999444
