@@ -177,7 +177,8 @@ class CMPNN(nn.Module):
 
         atom_grads = self.encoder.encoder.f_atoms.grad
         bond_grads = self.encoder.encoder.f_bonds.grad
-        return self.encoder.encoder.f_atoms[1:, :], atom_grads[1:, :], None, None
+        return self.encoder.encoder.f_atoms[1:, :], atom_grads[1:, :], self.encoder.encoder.f_bonds[1:, :], bond_grads[1:, :]
+        # return self.encoder.encoder.f_atoms[1:, :], atom_grads[1:, :], None, None
 
 
 class MPNEncoder(nn.Module):
