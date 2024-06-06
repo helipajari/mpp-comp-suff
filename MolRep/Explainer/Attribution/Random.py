@@ -49,8 +49,8 @@ class RandomBaseline(AttributionTechnique):
         elif model_name in ['MPNN', 'DMPNN', 'CMPNN']:
             atom_features, atom_grads, bond_features, bond_grads = model.get_gradients(data)
 
-            atom_weights = torch.Tensor(np.random.uniform(size=(atom_grads.shape[0]))) if atom_grads is not None else None
-            bond_weights = torch.Tensor(np.random.uniform(size=(bond_grads.shape[0]))) if bond_grads is not None else None
+            atom_weights = torch.Tensor(np.random.uniform(high=(2 * 1e-4), size=(atom_grads.shape[0]))) if atom_grads is not None else None
+            bond_weights = torch.Tensor(np.random.uniform(high=(2 * 1e-4), size=(bond_grads.shape[0]))) if bond_grads is not None else None
 
         model.eval()
         return atom_weights, bond_weights, output
