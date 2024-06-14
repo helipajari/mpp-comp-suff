@@ -1,3 +1,0 @@
-explainer,mol_idx,smile,explaining_smile,clean_explanation,non_explaining_smile,clean_nonexplanation,mol_pred,e_pred,ne_pred,comp,suff,expl length
-IG,3,CC(=O)N(C)c1ccc(c2c1cccc2)[N+](=O)[O-],O=CNc1ccc([N+](=O)[O-])c2ccccc12,O=CNc1ccc([N+](=O)[O-])c2ccccc12,CC.CN,CC.CN,0.565568,0.572062,0.453750,0.111818,-0.006494,0.888889
-IG,509,C[C@@H]1C[C@H]1NC(=O)N1CCc2cc(ccc2C1)F,NC=O.c1ccccc1,NC=O.c1ccccc1,CCN(C)Cc.C[C@@H]1CC1.cF,C[C@@H]1CC1,0.509846,0.567338,0.438039,0.071808,-0.057492,0.500000
