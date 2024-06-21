@@ -1,7 +1,7 @@
 # Sub-Repo
-Outputs/ 
-MolRep/Data/ 
-MolRep/Datasets/ 
+Outputs/Experiment/CMPNN_Benzene_explainer/SVG
+MolRep/Data/
+MolRep/Datasets/
 Examples/.ipynb_checkpoints
 
 # PyCharm
@@ -137,3 +137,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /MolRep/Splits/
+#/Outputs/Experiment/CMPNN_Benzene_explainer/10 epochs/SVG/

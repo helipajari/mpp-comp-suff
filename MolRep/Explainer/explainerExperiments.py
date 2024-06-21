@@ -8,6 +8,8 @@ Created on 2021.08.19
 """
 import os
 import random
+from itertools import chain
+
 import sklearn
 import collections
 
@@ -16,6 +18,7 @@ from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
 from rdkit import DataStructs
 
+from Examples.Helpers.Results_Plotting import roc_results
 from MolRep.Models.losses import get_loss_func
 from MolRep.Explainer.explainerNetWrapper import ExplainerNetWrapper
 from MolRep.Models.schedulers import build_lr_scheduler
@@ -103,6 +106,7 @@ class ExplainerExperiments:
         loss_fn = get_loss_func(self.dataset_config['task_type'], self.model_config.exp_name)
         shuffle = self.model_config['shuffle'] if 'shuffle' in self.model_config else True
 
+        # problem here
         train_loader, valid_loader, features_scaler, scaler = dataset.get_train_loader(self.model_config['batch_size'],
                                                         shuffle=shuffle)
 
@@ -124,6 +128,15 @@ class ExplainerExperiments:
 
         return train_metric, val_metric
 
+    def get_model(self, dataset, other=None):
+        model_class = self.model_config.model
+        model = model_class(dim_features=dataset.dim_features, dim_target=dataset.dim_target,
+                            model_configs=self.model_config, dataset_configs=self.dataset_config)
+
+        assert 'model_path' in other.keys()
+        model = load_checkpoint(path=other['model_path'], model=model)
+        return model
+
 
     def molecule_importance(self, dataset, attribution=None, logger=None, testing=True, training=False, other=None):
 
@@ -144,7 +157,9 @@ class ExplainerExperiments:
         else:
             test_loader = dataset.get_all_dataloader()
         y_preds, y_labels, results, atom_importance, bond_importance = net.explainer(test_loader=test_loader, scaler=scaler, logger=logger)
-        
+
+        roc_results(y_labels, y_preds)
+
         smiles_list = dataset.get_smiles_list(testing, training)
 
         # oof = a dataframe of the list of molecule representations?
@@ -295,13 +310,17 @@ class ExplainerExperiments:
                     bond_col[idx] = atom_col[atom_i_idx]
         return bond_col
 
-    def evaluate_attributions(self, dataset, atom_importance, bond_importance, binary=False, other=None):
+    def evaluate_attributions(self, dataset, atom_importance, bond_importance, binary=False, other=None, threshold=None, indices=None):
         att_true = dataset.get_attribution_truth()
 
         stats = collections.OrderedDict()
         smiles_list = dataset.get_smiles_list()
         att_probs = self.preprocessing_attributions(smiles_list, atom_importance, bond_importance)
-        
+
+        if indices is not None:
+            att_true = [att_true[i] for i in indices]
+            att_probs = [att_probs[i] for i in indices]
+
         if binary:
             opt_threshold = -1
             stats['ATT F1'] = np.nanmean(
@@ -309,12 +328,16 @@ class ExplainerExperiments:
             stats['ATT ACC'] = np.nanmean(
                 att_metrics.attribution_accuracy(att_true, att_probs))
         else:
-            opt_threshold = att_metrics.get_optimal_threshold(att_true, att_probs)
-            # opt_threshold = 0.5
-            att_binary = [np.array([1 if att>opt_threshold else 0 for att in att_prob]) for att_prob in att_probs]
+
+
+            if threshold is None:
+                threshold = att_metrics.get_optimal_threshold(att_true, att_probs)
+            att_binary = [np.array([1 if att>threshold else 0 for att in att_prob]) for att_prob in att_probs]
 
             stats['Attribution AUROC'] = np.nanmean(
                 att_metrics.attribution_auroc(att_true, att_probs))
+            roc_results(list(chain.from_iterable(att_true)), list(chain.from_iterable(att_probs)))
+
             stats['Attribution F1'] = np.nanmean(
                 att_metrics.attribution_f1(att_true, att_binary))
             stats['Attribution ACC'] = np.nanmean(
@@ -324,7 +347,8 @@ class ExplainerExperiments:
             stats['Attribution AUROC Mean'] = att_metrics.attribution_auroc_mean(att_true, att_probs)
             stats['Attribution ACC Mean'] = att_metrics.attribution_accuracy_mean(att_true, att_binary)
 
-        return stats, opt_threshold
+        return stats, threshold
+
 
     def evaluate_cliffs(self, dataset, atom_importance, bond_importance):
         smiles_list = dataset.get_smiles_list()

@@ -529,6 +529,7 @@ def MPNN_construct_dataset(features_path, train_idxs=None, valid_idxs=None, test
     dataset = torch.load(features_path)
     smiles_all, x_all, y_all = dataset["smiles_all"], dataset["x_all"], dataset["y_all"]
 
+    # TODO train indices broken with IOOB
     trainset = _construct_dataset(np.array(smiles_all)[train_idxs], np.array(x_all)[train_idxs], np.array(y_all)[train_idxs]) if train_idxs is not None else None
     validset = _construct_dataset(np.array(smiles_all)[valid_idxs], np.array(x_all)[valid_idxs], np.array(y_all)[valid_idxs]) if valid_idxs is not None else None
     testset = _construct_dataset(np.array(smiles_all)[test_idxs], np.array(x_all)[test_idxs], np.array(y_all)[test_idxs]) if test_idxs is not None else None
