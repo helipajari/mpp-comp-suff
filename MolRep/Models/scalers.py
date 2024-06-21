@@ -31,7 +31,14 @@ class StandardScaler:
         :param X: A list of lists of floats.
         :return: The fitted StandardScaler.
         """
-        X = np.array(X).astype(float)
+
+        # 3MR with regression fails here
+        try:
+            X = np.array(X).astype(float)
+        except ValueError as e:
+            print("Error when converting to float:", e)
+            print("Offending value:", X[np.where(np.isnan(X))[0][0]])
+
         self.means = np.nanmean(X, axis=0)
         self.stds = np.nanstd(X, axis=0)
         self.means = np.where(np.isnan(self.means), np.zeros(self.means.shape), self.means)
@@ -46,7 +53,14 @@ class StandardScaler:
         :param X: A list of lists of floats.
         :return: The transformed data.
         """
-        X = np.array(X).astype(float)
+
+        # 3MR with regression fails here
+        try:
+            X = np.array(X).astype(float)
+        except ValueError as e:
+            print("Error when converting to float:", e)
+            print("Offending value:", X[np.where(np.isnan(X))[0][0]])
+
         transformed_with_nan = (X - self.means) / self.stds
         transformed_with_none = np.where(np.isnan(transformed_with_nan), self.replace_nan_token, transformed_with_nan)
 

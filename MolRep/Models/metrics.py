@@ -54,6 +54,10 @@ def calc_metric(y_labels: List, y_preds: List, metric_type: str, multiclass_num_
 
         # print(y_preds)
         # print(y_labels)
+
+        # convert items in preds into tensors if not already one (multi-classification has floats)
+        y_preds = [torch.tensor(item) if isinstance(item, float) else item for item in y_preds]
+
         y_preds_array = np.array([tensor.numpy() for tensor in y_preds])
         return roc_auc_score(y_labels, y_preds_array, multi_class='ovr')
 
