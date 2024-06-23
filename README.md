@@ -66,6 +66,10 @@ if this occurs on the first run).
 2. Repeat until all explainers have comprehensiveness and sufficiency calculated.
 3. Run cells until average comprehensiveness and sufficiency per explainer have been output. 
 
+## Files
+- `CMPNN_explained_by_{ATTRIBUTION}.csv` is generated for every explainer, but is identical for each
+- the explainer specific explanations are in `SVG_DIR` in `importances.csv`
+
 ## References
 [1] J. Rao, S. Zheng, Y. Song, J. Chen, C. Li, J. Xie, H. Yang, H. Chen, and Y. Yang, 
 “Molrep: A deep representation learning library for molecular property prediction”, https://arxiv.org/abs/2107.04119
